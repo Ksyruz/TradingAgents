@@ -1,0 +1,39 @@
+# LiteLLM Proxy Configuration
+# Routes deep_think_llm (Claude) to Anthropic API
+# Routes quick_think_llm (Local) to Ollama
+# Both exposed via single OpenAI-compatible endpoint
+
+model_list:
+  - model_name: "claude-opus-4-1"
+    litellm_params:
+      model: "claude-opus-4-1"
+      api_key: "${ANTHROPIC_API_KEY}"
+      timeout: 120
+      max_tokens: 4096
+
+  - model_name: "mistral-large"
+    litellm_params:
+      model: "openai/mistral-large"
+      api_base: "${OLLAMA_BASE_URL}"
+      timeout: 60
+      max_tokens: 2048
+
+  - model_name: "neural-chat"
+    litellm_params:
+      model: "openai/neural-chat"
+      api_base: "${OLLAMA_BASE_URL}"
+      timeout: 60
+      max_tokens: 2048
+
+router_settings:
+  enabled_endpoints:
+    - "openai"
+  timeout: 120
+  fall_back_allowed_model_names: []
+
+# Logging & debugging
+general_settings:
+  master_key: "${LITELLM_MASTER_KEY}"
+  log_level: "debug"
+  # Use litellm logs for cost tracking
+  enable_cost_logging: true
